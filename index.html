@@ -3,221 +3,602 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D2R P8 Automation</title>
+<title>D2R P8 Automation - Professional</title>
 <style>
-body {
+* {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #0d0d0d url('https://images4.alphacoders.com/113/1131891.jpg') no-repeat center center fixed;
-  background-size: cover;
-  color: #fff;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-header {
-  min-height: 50vh;
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Animated background particles */
+.bg-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: radial-gradient(circle, #ff6b35, transparent);
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+}
+
+/* Header Section */
+.hero {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: center;
   text-align: center;
-  padding: 15px 10px;
-  animation: fadeIn 1.2s ease-in;
-  background: rgba(0, 0, 0, 0.7);
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(20,20,20,0.95) 100%);
+  position: relative;
 }
 
-header h1 {
-  font-size: 2.5rem;
-  color: #ff6f00;
-  margin-bottom: 6px;
-  text-shadow: 2px 2px 5px #000;
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="0.5" fill="%23ff6b35" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+  animation: subtle-move 20s ease-in-out infinite;
 }
 
-header p {
-  font-size: 1rem;
-  max-width: 600px;
-  margin-bottom: 12px;
-  color: #ddd;
+@keyframes subtle-move {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-1px, -1px); }
 }
 
-.buttons a {
-  padding: 8px 18px;
-  margin: 4px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.hero-content {
+  max-width: 800px;
+  padding: 0 2rem;
+  z-index: 2;
 }
 
-.buttons a:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+.hero h1 {
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffa726 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+  animation: glow-pulse 3s ease-in-out infinite alternate;
 }
 
-.paypal {
-  background: #d32f2f;
-  color: #fff;
+@keyframes glow-pulse {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.1); }
 }
 
-.d2jsp {
-  background: #ffc107;
-  color: #000;
+.hero-subtitle {
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  font-weight: 300;
 }
 
-section {
-  padding: 20px 10px;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.8);
-}
-
-.compare, .features {
+.cta-buttons {
   display: flex;
-  flex-wrap: wrap;
+  gap: 1rem;
   justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
 }
 
-.compare div, .feature-card {
-  background: #1e1e1e;
-  padding: 12px;
-  border-radius: 10px;
-  min-width: 200px;
-  max-width: 320px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.3);
-}
-
-.compare h3 {
-  color: #ff3d00;
-  font-size: 1rem;
-}
-
-.compare .green h3 {
-  color: #4caf50;
-}
-
-footer {
-  background: rgba(18, 18, 18, 0.9);
-  padding: 20px 10px;
+.cta-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
   text-align: center;
+  min-width: 200px;
 }
 
-.faq h3 {
-  color: #03a9f4;
-  font-size: 0.95rem;
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
 }
 
-.creator {
+.cta-btn:hover::before {
+  left: 100%;
+}
+
+.cta-primary {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  color: white;
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+}
+
+.cta-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+}
+
+.cta-secondary {
+  background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+  color: #1a1a1a;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+}
+
+.cta-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(255, 193, 7, 0.4);
+}
+
+/* Main Content Sections */
+.section {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Comparison Section */
+.comparison {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  margin: 2rem 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.comparison-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.comparison-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.comparison-card.negative {
+  border-left: 4px solid #ff5252;
+}
+
+.comparison-card.positive {
+  border-left: 4px solid #4caf50;
+}
+
+.comparison-title {
   font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.comparison-title.negative {
+  color: #ff8a80;
+}
+
+.comparison-title.positive {
+  color: #81c784;
+}
+
+.comparison-list {
+  list-style: none;
+  padding: 0;
+}
+
+.comparison-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.comparison-list li:last-child {
+  border-bottom: none;
+}
+
+/* Features Section */
+.features {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 140, 66, 0.05) 100%);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  margin: 2rem 0;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b35, #ff8c42, #ffa726);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px rgba(255, 107, 53, 0.2);
+}
+
+.feature-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #ff8c42;
+}
+
+.feature-desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+/* Creator Section */
+.creator {
+  background: rgba(224, 64, 251, 0.1);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin: 2rem 0;
+  border: 1px solid rgba(224, 64, 251, 0.2);
+}
+
+.creator-title {
+  font-size: 2rem;
+  font-weight: 700;
   color: #e040fb;
-  margin-bottom: 10px;
+  margin-bottom: 2rem;
 }
 
 .creator-links {
-  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.creator-links a {
-  padding: 7px 12px;
-  margin: 4px;
-  border-radius: 5px;
+.creator-link {
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
   text-decoration: none;
-  background: #3f51b5;
-  color: #fff;
-  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.creator-links a.discord {
-  background: #673ab7;
+.creator-link.d2jsp {
+  background: linear-gradient(135deg, #3f51b5 0%, #5c6bc0 100%);
+  color: white;
 }
 
-.creator-links a:hover {
-  background: #5c6bc0;
+.creator-link.discord {
+  background: linear-gradient(135deg, #7289da 0%, #99aab5 100%);
+  color: white;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+.creator-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* FAQ Section */
+.faq {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  margin: 2rem 0;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.faq-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 15px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.faq-question {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #03a9f4;
+  margin-bottom: 0.5rem;
+}
+
+.faq-answer {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  header h1 { font-size: 1.8rem; }
-  header p { font-size: 0.95rem; }
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .comparison-grid,
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .creator-links {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .creator-link {
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
+  }
+}
+
+/* Scroll animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
 }
 </style>
 </head>
 <body>
-
-<header>
-  <h1>D2R P8 AUTOMATION</h1>
-  <p>Unleash the power of automation in Diablo II: Resurrected. Intelligent game creation, leecher follow, BO buff casting, and more.</p>
-  <div class="buttons">
-    <a class="paypal" href="https://paypal.me/AshAlefi?country.x=DK&locale.x=da_DK" target="_blank">GET SCRIPT - $50</a>
-    <a class="d2jsp" href="https://forums.d2jsp.org/user.php?i=1433735" target="_blank">5,000 FG (D2JSP)</a>
+  <!-- Animated background particles -->
+  <div class="bg-particles">
+    <div class="particle" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; top: 80%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 60%; top: 30%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 80%; top: 70%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 30%; top: 60%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 70%; top: 10%; animation-delay: 5s;"></div>
   </div>
-</header>
 
-<section>
-  <h2>Stop The Endless Manual Grind</h2>
-  <p>Our automation handles the repetitive tasks so you can focus on what matters most: the loot & experience.</p>
-  <div class="compare">
-    <div>
-      <h3>✘ Manual Grinding</h3>
-      <ul style="text-align:left;">
-        <li>Repetitive game creation</li>
-        <li>Manual leecher management</li>
-        <li>Tedious BO casting</li>
-        <li>Slow farming</li>
-      </ul>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>D2R P8 AUTOMATION</h1>
+      <p class="hero-subtitle">Unleash the power of automation in Diablo II: Resurrected. Intelligent game creation, leecher follow, BO buff casting, and more.</p>
+      <div class="cta-buttons">
+        <a href="https://paypal.me/AshAlefi?country.x=DK&locale.x=da_DK" target="_blank" class="cta-btn cta-primary">GET SCRIPT - $50</a>
+        <a href="https://forums.d2jsp.org/user.php?i=1433735" target="_blank" class="cta-btn cta-secondary">5,000 FG (D2JSP)</a>
+      </div>
     </div>
-    <div class="green">
-      <h3>✔ Automated Efficiency</h3>
-      <ul style="text-align:left;">
-        <li>Fast game creation</li>
-        <li>Smart leecher follow</li>
-        <li>Automated buffs</li>
-        <li>Efficient farming</li>
-      </ul>
+  </section>
+
+  <!-- Main Content -->
+  <div class="section">
+    <div class="comparison">
+      <h2 class="section-title">Stop The Endless Manual Grind</h2>
+      <p style="text-align: center; color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">Our automation handles the repetitive tasks so you can focus on what matters most: the loot & experience.</p>
+      
+      <div class="comparison-grid">
+        <div class="comparison-card negative">
+          <h3 class="comparison-title negative">✘ Manual Grinding</h3>
+          <ul class="comparison-list">
+            <li>Repetitive game creation</li>
+            <li>Manual leecher management</li>
+            <li>Tedious BO casting</li>
+            <li>Slow farming efficiency</li>
+          </ul>
+        </div>
+        <div class="comparison-card positive">
+          <h3 class="comparison-title positive">✔ Automated Efficiency</h3>
+          <ul class="comparison-list">
+            <li>Fast game creation</li>
+            <li>Smart leecher follow</li>
+            <li>Automated buffs</li>
+            <li>Efficient farming</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <h2 class="section-title">Powerful Automation Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3 class="feature-title">Game Creation</h3>
+          <p class="feature-desc">Automated game management with intelligent timing</p>
+        </div>
+        <div class="feature-card">
+          <h3 class="feature-title">Leecher Follow</h3>
+          <p class="feature-desc">Smart leecher system with pathfinding</p>
+        </div>
+        <div class="feature-card">
+          <h3 class="feature-title">BO Buff Casting</h3>
+          <p class="feature-desc">Automatic BO orders for maximum efficiency</p>
+        </div>
+        <div class="feature-card">
+          <h3 class="feature-title">Exit & Restart</h3>
+          <p class="feature-desc">Seamless cycle automation</p>
+        </div>
+        <div class="feature-card">
+          <h3 class="feature-title">Multi-Instance</h3>
+          <p class="feature-desc">Run up to 8 D2R copies simultaneously</p>
+        </div>
+        <div class="feature-card">
+          <h3 class="feature-title">Customizable</h3>
+          <p class="feature-desc">Perfectly fits your playstyle</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="creator">
+      <h2 class="creator-title">Created by k0m // Ash</h2>
+      <div class="creator-links">
+        <a href="https://forums.d2jsp.org/user.php?i=1433735" target="_blank" class="creator-link d2jsp">View D2JSP Profile</a>
+        <a href="https://discord.gg/AdKck9ReX6" target="_blank" class="creator-link discord">Join Discord</a>
+        <a href="https://discord.com/users/666741987570876425" target="_blank" class="creator-link discord">My Discord Profile</a>
+      </div>
+    </div>
+
+    <div class="faq">
+      <h2 class="section-title">FAQ</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3 class="faq-question">Safe to use?</h3>
+          <p class="faq-answer">Designed for safety, use at your discretion.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">How many instances?</h3>
+          <p class="faq-answer">Up to 8 instances at once.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Do I get updates?</h3>
+          <p class="faq-answer">Lifetime updates included.</p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-question">Payment methods?</h3>
+          <p class="faq-answer">PayPal & D2JSP FG supported.</p>
+        </div>
+      </div>
     </div>
   </div>
-</section>
 
-<section>
-  <h2>Powerful Automation Features</h2>
-  <div class="features">
-    <div class="feature-card"><h3>Game Creation</h3><p>Automated game management</p></div>
-    <div class="feature-card"><h3>Leecher Follow</h3><p>Smart leecher system</p></div>
-    <div class="feature-card"><h3>BO Buff Casting</h3><p>Automatic BO orders</p></div>
-    <div class="feature-card"><h3>Exit & Restart</h3><p>Cycle automation</p></div>
-    <div class="feature-card"><h3>Multi-Instance</h3><p>Run 8 D2R copies</p></div>
-    <div class="feature-card"><h3>Customizable</h3><p>Fits your playstyle</p></div>
-  </div>
-</section>
+  <script>
+    // Add scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
 
-<section>
-  <h2 class="creator">Created by k0m // Ash</h2>
-  <div class="creator-links">
-    <a href="https://forums.d2jsp.org/user.php?i=1433735" target="_blank">View D2JSP Profile</a>
-    <a class="discord" href="https://discord.gg/AdKck9ReX6" target="_blank">Join Discord</a>
-    <a class="discord" href="https://discord.com/users/666741987570876425" target="_blank">My Discord Profile</a>
-  </div>
-</section>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in-up');
+        }
+      });
+    }, observerOptions);
 
-<footer>
-  <h2>FAQ</h2>
-  <div class="faq">
-    <h3>Safe to use?</h3>
-    <p>Designed for safety, use at your discretion.</p>
+    // Observe all sections
+    document.querySelectorAll('.comparison, .features, .creator, .faq').forEach(el => {
+      observer.observe(el);
+    });
 
-    <h3>How many instances?</h3>
-    <p>Up to 8 instances at once.</p>
+    // Add dynamic particle animation
+    function createParticle() {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 6 + 's';
+      document.querySelector('.bg-particles').appendChild(particle);
+      
+      setTimeout(() => {
+        particle.remove();
+      }, 6000);
+    }
 
-    <h3>Do I get updates?</h3>
-    <p>Lifetime updates included.</p>
-
-    <h3>Payment methods?</h3>
-    <p>PayPal & D2JSP FG supported.</p>
-  </div>
-</footer>
-
+    // Create particles periodically
+    setInterval(createParticle, 2000);
+  </script>
 </body>
 </html>
