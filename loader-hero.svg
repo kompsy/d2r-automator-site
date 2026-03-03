@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#080c12"/>
+      <stop offset="100%" style="stop-color:#0a1018"/>
+    </linearGradient>
+    <linearGradient id="cyan-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4aa"/>
+      <stop offset="100%" style="stop-color:#00a080"/>
+    </linearGradient>
+    <linearGradient id="glow2" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#00d4aa;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="b1"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="b2"><feGaussianBlur stdDeviation="4"/></filter>
+    <filter id="gf2">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg2)"/>
+  <ellipse cx="400" cy="300" rx="300" ry="180" fill="url(#glow2)" filter="url(#b1)"/>
+  <circle cx="250" cy="180" r="70" fill="#00d4aa" opacity="0.04" filter="url(#b1)"/>
+  <!-- Grid -->
+  <g stroke="rgba(255,255,255,0.025)" stroke-width="0.5">
+    <line x1="0" y1="100" x2="800" y2="100"/><line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="300" x2="800" y2="300"/><line x1="0" y1="400" x2="800" y2="400"/>
+    <line x1="160" y1="0" x2="160" y2="500"/><line x1="320" y1="0" x2="320" y2="500"/>
+    <line x1="480" y1="0" x2="480" y2="500"/><line x1="640" y1="0" x2="640" y2="500"/>
+  </g>
+  <!-- Multi-instance windows -->
+  <g filter="url(#gf2)">
+    <!-- Window 1 -->
+    <g transform="translate(220,120)">
+      <rect x="0" y="0" width="140" height="95" rx="6" fill="#0d1420" stroke="#00d4aa" stroke-width="1" opacity="0.7"/>
+      <rect x="0" y="0" width="140" height="18" rx="6" fill="#00d4aa" opacity="0.15"/>
+      <circle cx="12" cy="9" r="3" fill="#ff4757" opacity="0.7"/><circle cx="24" cy="9" r="3" fill="#f0b400" opacity="0.7"/><circle cx="36" cy="9" r="3" fill="#00d26a" opacity="0.7"/>
+      <text x="70" y="12" text-anchor="middle" fill="#00d4aa" font-size="7" font-family="monospace" opacity="0.8">Main</text>
+      <rect x="10" y="28" width="50" height="4" rx="2" fill="#00d4aa" opacity="0.2"/>
+      <rect x="10" y="38" width="80" height="4" rx="2" fill="#00d4aa" opacity="0.1"/>
+      <rect x="10" y="48" width="35" height="4" rx="2" fill="#00d4aa" opacity="0.15"/>
+      <rect x="10" y="65" width="120" height="18" rx="4" fill="#00d4aa" opacity="0.12"/>
+      <text x="70" y="77" text-anchor="middle" fill="#00d4aa" font-size="8" font-family="sans-serif" font-weight="600" opacity="0.7">LAUNCH</text>
+    </g>
+    <!-- Window 2 -->
+    <g transform="translate(330,155)">
+      <rect x="0" y="0" width="140" height="95" rx="6" fill="#0d1420" stroke="#00d4aa" stroke-width="1" opacity="0.55"/>
+      <rect x="0" y="0" width="140" height="18" rx="6" fill="#00d4aa" opacity="0.1"/>
+      <circle cx="12" cy="9" r="3" fill="#ff4757" opacity="0.5"/><circle cx="24" cy="9" r="3" fill="#f0b400" opacity="0.5"/><circle cx="36" cy="9" r="3" fill="#00d26a" opacity="0.5"/>
+      <text x="70" y="12" text-anchor="middle" fill="#00d4aa" font-size="7" font-family="monospace" opacity="0.6">Filler-1</text>
+      <rect x="10" y="28" width="50" height="4" rx="2" fill="#00d4aa" opacity="0.12"/>
+      <rect x="10" y="38" width="80" height="4" rx="2" fill="#00d4aa" opacity="0.08"/>
+      <rect x="10" y="48" width="35" height="4" rx="2" fill="#00d4aa" opacity="0.1"/>
+    </g>
+    <!-- Window 3 -->
+    <g transform="translate(440,190)">
+      <rect x="0" y="0" width="140" height="95" rx="6" fill="#0d1420" stroke="#00d4aa" stroke-width="1" opacity="0.4"/>
+      <rect x="0" y="0" width="140" height="18" rx="6" fill="#00d4aa" opacity="0.08"/>
+      <circle cx="12" cy="9" r="3" fill="#ff4757" opacity="0.4"/><circle cx="24" cy="9" r="3" fill="#f0b400" opacity="0.4"/><circle cx="36" cy="9" r="3" fill="#00d26a" opacity="0.4"/>
+      <text x="70" y="12" text-anchor="middle" fill="#00d4aa" font-size="7" font-family="monospace" opacity="0.5">Filler-2</text>
+      <rect x="10" y="28" width="50" height="4" rx="2" fill="#00d4aa" opacity="0.08"/>
+      <rect x="10" y="38" width="80" height="4" rx="2" fill="#00d4aa" opacity="0.06"/>
+    </g>
+  </g>
+  <!-- Connecting lines -->
+  <g stroke="#00d4aa" stroke-width="0.8" opacity="0.2" stroke-dasharray="4 3">
+    <line x1="360" y1="170" x2="330" y2="180"/>
+    <line x1="470" y1="200" x2="440" y2="215"/>
+  </g>
+  <!-- Key icon -->
+  <g transform="translate(400,130)" opacity="0.5">
+    <path d="M-8-3 a7 7 0 1 1 0 6 L8 3 L8-1 L4-1 L4-3Z" fill="none" stroke="#00d4aa" stroke-width="1.2"/>
+  </g>
+  <!-- Title -->
+  <text x="400" y="370" text-anchor="middle" fill="white" font-family="'Segoe UI','Helvetica Neue',sans-serif" font-size="36" font-weight="800" letter-spacing="-1">D2RLOADER</text>
+  <text x="400" y="400" text-anchor="middle" fill="#8891a4" font-family="'Segoe UI','Helvetica Neue',sans-serif" font-size="14" font-weight="400" letter-spacing="3">MULTI-INSTANCE LAUNCHER · D2R ROTW</text>
+  <!-- Corner accents -->
+  <path d="M30 30 L30 60 M30 30 L60 30" stroke="#00d4aa" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <path d="M770 30 L770 60 M770 30 L740 30" stroke="#00d4aa" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <path d="M30 470 L30 440 M30 470 L60 470" stroke="#00d4aa" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <path d="M770 470 L770 440 M770 470 L740 470" stroke="#00d4aa" stroke-width="1.5" opacity="0.4" fill="none"/>
+</svg>

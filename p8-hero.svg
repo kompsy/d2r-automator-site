@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a12"/>
+      <stop offset="100%" style="stop-color:#12080a"/>
+    </linearGradient>
+    <linearGradient id="fire" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#e85d26"/>
+      <stop offset="50%" style="stop-color:#ff8c42"/>
+      <stop offset="100%" style="stop-color:#ffd700;stop-opacity:0.6"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" style="stop-color:#e85d26;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#e85d26;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="blur1"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="blur2"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="glow-filter">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <!-- Glow orbs -->
+  <ellipse cx="400" cy="350" rx="250" ry="150" fill="url(#glow)" filter="url(#blur1)"/>
+  <circle cx="300" cy="200" r="80" fill="#e85d26" opacity="0.05" filter="url(#blur1)"/>
+  <circle cx="550" cy="150" r="60" fill="#ff8c42" opacity="0.04" filter="url(#blur1)"/>
+  <!-- Grid lines -->
+  <g stroke="rgba(255,255,255,0.03)" stroke-width="0.5">
+    <line x1="0" y1="100" x2="800" y2="100"/>
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="0" y1="300" x2="800" y2="300"/>
+    <line x1="0" y1="400" x2="800" y2="400"/>
+    <line x1="160" y1="0" x2="160" y2="500"/>
+    <line x1="320" y1="0" x2="320" y2="500"/>
+    <line x1="480" y1="0" x2="480" y2="500"/>
+    <line x1="640" y1="0" x2="640" y2="500"/>
+  </g>
+  <!-- Central icon - automated cycle -->
+  <g transform="translate(400,220)" filter="url(#glow-filter)">
+    <!-- Outer ring -->
+    <circle cx="0" cy="0" r="80" fill="none" stroke="url(#fire)" stroke-width="2" stroke-dasharray="8 4" opacity="0.6">
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="30s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#e85d26" stroke-width="1.5" opacity="0.4">
+      <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="20s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Center flame symbol -->
+    <path d="M0-35 C12-20 25-5 20 15 C18 25 10 35 0 40 C-10 35 -18 25 -20 15 C-25-5 -12-20 0-35Z" fill="url(#fire)" opacity="0.9"/>
+    <path d="M0-20 C8-10 14 0 10 15 C8 22 4 28 0 30 C-4 28 -8 22 -10 15 C-14 0 -8-10 0-20Z" fill="#ffd700" opacity="0.5"/>
+    <!-- 8 dots around ring for "P8" -->
+    <g fill="#e85d26" opacity="0.8">
+      <circle cx="0" cy="-75" r="4"/><circle cx="53" cy="-53" r="4"/>
+      <circle cx="75" cy="0" r="4"/><circle cx="53" cy="53" r="4"/>
+      <circle cx="0" cy="75" r="4"/><circle cx="-53" cy="53" r="4"/>
+      <circle cx="-75" cy="0" r="4"/><circle cx="-53" cy="-53" r="4"/>
+    </g>
+  </g>
+  <!-- Title -->
+  <text x="400" y="370" text-anchor="middle" fill="white" font-family="'Segoe UI','Helvetica Neue',sans-serif" font-size="36" font-weight="800" letter-spacing="-1">P8 SCRIPT</text>
+  <text x="400" y="400" text-anchor="middle" fill="#8891a4" font-family="'Segoe UI','Helvetica Neue',sans-serif" font-size="14" font-weight="400" letter-spacing="3">AUTOMATED FARMING · D2R ROTW</text>
+  <!-- Corner accents -->
+  <path d="M30 30 L30 60 M30 30 L60 30" stroke="#e85d26" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <path d="M770 30 L770 60 M770 30 L740 30" stroke="#e85d26" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <path d="M30 470 L30 440 M30 470 L60 470" stroke="#e85d26" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <path d="M770 470 L770 440 M770 470 L740 470" stroke="#e85d26" stroke-width="1.5" opacity="0.4" fill="none"/>
+</svg>
