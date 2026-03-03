@@ -36,9 +36,9 @@
     <text x="0" y="-34" text-anchor="middle" fill="#f0b400" font-size="9" font-family="monospace" font-weight="600" opacity="0.9">PC1 · SERVER</text>
     <!-- Status indicators -->
     <g transform="translate(-55,-18)">
-      <circle cx="8" cy="8" r="4" fill="#00d26a" opacity="0.8"/><text x="18" y="12" fill="#8891a4" font-size="7" font-family="monospace">Fillers × 7</text>
-      <circle cx="8" cy="24" r="4" fill="#00d26a" opacity="0.8"/><text x="18" y="28" fill="#8891a4" font-size="7" font-family="monospace">BoBarb ✓</text>
-      <circle cx="8" cy="40" r="4" fill="#5865f2" opacity="0.8"/><text x="18" y="44" fill="#8891a4" font-size="7" font-family="monospace">Discord ✓</text>
+      <circle cx="8" cy="8" r="4" fill="#00d26a" opacity="0.8"/><text x="18" y="12" fill="#8891a4" font-size="7" font-family="monospace">Fillers x7</text>
+      <circle cx="8" cy="24" r="4" fill="#00d26a" opacity="0.8"/><text x="18" y="28" fill="#8891a4" font-size="7" font-family="monospace">BoBarb OK</text>
+      <circle cx="8" cy="40" r="4" fill="#5865f2" opacity="0.8"/><text x="18" y="44" fill="#8891a4" font-size="7" font-family="monospace">Discord OK</text>
     </g>
   </g>
   <!-- PC2 - Agent (right) -->
@@ -48,13 +48,13 @@
     <text x="0" y="-34" text-anchor="middle" fill="#5865f2" font-size="9" font-family="monospace" font-weight="600" opacity="0.9">PC2 · YOU PLAY</text>
     <!-- Hotkey indicators -->
     <g transform="translate(-55,-18)">
-      <rect x="0" y="0" width="28" height="14" rx="3" fill="#5865f2" opacity="0.15" stroke="#5865f2" stroke-width="0.5" opacity="0.3"/>
+      <rect x="0" y="0" width="28" height="14" rx="3" fill="#5865f2" stroke="#5865f2" stroke-width="0.5" opacity="0.25"/>
       <text x="14" y="10" text-anchor="middle" fill="#5865f2" font-size="7" font-family="monospace" opacity="0.9">F5</text>
       <text x="36" y="10" fill="#8891a4" font-size="7" font-family="monospace">Battle Orders</text>
-      <rect x="0" y="18" width="28" height="14" rx="3" fill="#5865f2" opacity="0.15" stroke="#5865f2" stroke-width="0.5" opacity="0.3"/>
+      <rect x="0" y="18" width="28" height="14" rx="3" fill="#5865f2" stroke="#5865f2" stroke-width="0.5" opacity="0.25"/>
       <text x="14" y="28" text-anchor="middle" fill="#5865f2" font-size="7" font-family="monospace" opacity="0.9">F6</text>
       <text x="36" y="28" fill="#8891a4" font-size="7" font-family="monospace">Next Game</text>
-      <rect x="0" y="36" width="28" height="14" rx="3" fill="#5865f2" opacity="0.15" stroke="#5865f2" stroke-width="0.5" opacity="0.3"/>
+      <rect x="0" y="36" width="28" height="14" rx="3" fill="#5865f2" stroke="#5865f2" stroke-width="0.5" opacity="0.25"/>
       <text x="14" y="46" text-anchor="middle" fill="#5865f2" font-size="7" font-family="monospace" opacity="0.9">F7</text>
       <text x="36" y="46" fill="#8891a4" font-size="7" font-family="monospace">Toggle Leeches</text>
     </g>
@@ -72,11 +72,12 @@
   <!-- Discord icon below -->
   <g transform="translate(400,240)" opacity="0.4">
     <circle cx="0" cy="0" r="16" fill="#5865f2" opacity="0.15"/>
-    <text x="0" y="5" text-anchor="middle" fill="#5865f2" font-size="14">⟡</text>
+    <path d="M0-6 L6 0 L0 6 L-6 0Z" fill="#5865f2"/>
   </g>
   <!-- Crown/premium badge -->
-  <g transform="translate(400,90)" opacity="0.6">
-    <text x="0" y="0" text-anchor="middle" fill="#f0b400" font-size="24">♔</text>
+  <g transform="translate(400,82)" opacity="0.6">
+    <path d="M-12 8 L-8-4 L0 4 L8-4 L12 8Z" fill="#f0b400" stroke="#f0b400" stroke-width="0.5"/>
+    <rect x="-13" y="9" width="26" height="4" rx="1" fill="#f0b400"/>
   </g>
   <!-- Title -->
   <text x="400" y="370" text-anchor="middle" fill="white" font-family="'Segoe UI','Helvetica Neue',sans-serif" font-size="34" font-weight="800" letter-spacing="-1">D2R 2-PC SYSTEM</text>
