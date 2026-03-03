@@ -3,612 +3,439 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>k0m's D2R Tools - P8 Script, D2RLoader & Discord Command Filler</title>
+<title>k0m's D2R Tools — P8 Script, D2RLoader & 2-PC System for D2R ROTW</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-    :root {
-        --color-primary: #ff6b35;
-        --color-secondary: #ffc107;
-        --color-paypal: #0070ba;
-        --color-background: #0a0a0a;
-        --color-surface: #1a1a1a;
-        --color-text: #e0e0e0;
-        --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+:root {
+    --bg: #07080c;
+    --bg-card: #0d0f16;
+    --bg-card-hover: #12141e;
+    --bg-elevated: #161929;
+    --accent: #e85d26;
+    --accent-glow: rgba(232, 93, 38, 0.35);
+    --accent-dim: #c44d1e;
+    --cyan: #00d4aa;
+    --cyan-glow: rgba(0, 212, 170, 0.25);
+    --blue: #5865f2;
+    --gold: #f0b400;
+    --text: #eaedf3;
+    --text-dim: #8891a4;
+    --text-muted: #4a5168;
+    --border: rgba(255,255,255,0.06);
+    --glass: rgba(13, 15, 22, 0.7);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
-    html {
-        scroll-behavior: smooth;
-    }
+body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
 
-    body {
-        font-family: var(--font-main);
-        background-color: var(--color-background);
-        color: var(--color-text);
-        overflow-x: hidden;
-    }
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+}
 
-    .bg-particles {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: -1;
-        background: radial-gradient(ellipse at center, rgba(20, 20, 20, 0) 0%, var(--color-background) 100%);
-    }
+.grid-bg {
+    position: fixed; inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none; z-index: -2;
+}
 
-    .particle {
-        position: absolute;
-        width: 2px;
-        height: 2px;
-        background: radial-gradient(circle, var(--color-primary), transparent);
-        border-radius: 50%;
-        animation: float 8s ease-in-out infinite;
-        opacity: 0;
-    }
+.glow-orb {
+    position: fixed; border-radius: 50%; filter: blur(120px);
+    pointer-events: none; z-index: -1;
+    animation: orbFloat 20s ease-in-out infinite alternate;
+}
+.glow-orb-1 { width: 600px; height: 600px; background: var(--accent-glow); top: -10%; left: -5%; }
+.glow-orb-2 { width: 500px; height: 500px; background: var(--cyan-glow); bottom: -15%; right: -10%; animation-delay: -7s; }
+.glow-orb-3 { width: 400px; height: 400px; background: rgba(88,101,242,0.15); top: 40%; right: 20%; animation-delay: -14s; }
 
-    @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
-        50% { transform: translateY(-25px) rotate(180deg); opacity: 0.7; }
-        75% { opacity: 0; }
-    }
+@keyframes orbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -20px) scale(1.05); }
+    66% { transform: translate(-20px, 30px) scale(0.95); }
+    100% { transform: translate(10px, -10px) scale(1.02); }
+}
 
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
+.container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
 
-    .hero {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background: radial-gradient(circle at 50% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 40%);
-        position: relative;
-    }
+nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(7, 8, 12, 0.6);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border-bottom: 1px solid var(--border); transition: background 0.3s;
+}
+nav .container { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.nav-logo { font-family: var(--font-mono); font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.5px; }
+.nav-logo span { color: var(--text-dim); font-weight: 400; }
+.nav-links { display: flex; gap: 2rem; align-items: center; }
+.nav-links a { color: var(--text-dim); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; letter-spacing: 0.3px; }
+.nav-links a:hover { color: var(--text); }
+.nav-cta { padding: 0.5rem 1.2rem; background: var(--accent); color: white !important; border-radius: 8px; font-weight: 600 !important; transition: all 0.2s !important; box-shadow: 0 0 20px var(--accent-glow); }
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 30px var(--accent-glow); }
 
-    .hero-content {
-        width: 100%;
-        z-index: 2;
-    }
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 6rem 2rem 4rem; }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; background: rgba(232,93,38,0.08); border: 1px solid rgba(232,93,38,0.2); border-radius: 100px; font-size: 0.8rem; font-weight: 500; color: var(--accent); margin-bottom: 2rem; letter-spacing: 0.5px; animation: fadeUp 0.8s ease-out both; }
+.hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.hero h1 { font-family: var(--font-display); font-size: clamp(3rem,8vw,5.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -2px; margin-bottom: 1.5rem; animation: fadeUp 0.8s 0.1s ease-out both; }
+.hero h1 .gradient { background: linear-gradient(135deg, var(--accent) 0%, #ff8c42 40%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-sub { font-size: clamp(1rem,2.5vw,1.25rem); color: var(--text-dim); max-width: 650px; margin: 0 auto 3rem; font-weight: 300; line-height: 1.7; animation: fadeUp 0.8s 0.2s ease-out both; }
+.hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease-out both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-    .hero h1 {
-        font-size: clamp(2.5rem, 7vw, 4.5rem);
-        font-weight: 900;
-        background: linear-gradient(135deg, var(--color-primary) 0%, #ff8c42 50%, #ffa726 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 1rem;
-        text-shadow: 0 0 40px rgba(255, 107, 53, 0.4);
-        animation: glow-pulse 4s ease-in-out infinite alternate;
-    }
-    
-    @keyframes glow-pulse {
-        from { filter: brightness(1); }
-        to { filter: brightness(1.2); }
-    }
+.btn { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.85rem 2rem; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: all 0.25s cubic-bezier(0.4,0,0.2,1); cursor: pointer; border: none; position: relative; overflow: hidden; }
+.btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); transform: translateX(-100%); transition: transform 0.5s; }
+.btn:hover::after { transform: translateX(100%); }
+.btn-primary { background: linear-gradient(135deg, var(--accent) 0%, #c44d1e 100%); color: white; box-shadow: 0 4px 24px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--accent-glow); }
+.btn-secondary { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+.btn-secondary:hover { background: var(--bg-elevated); border-color: rgba(255,255,255,0.1); transform: translateY(-2px); }
+.btn-paypal { background: linear-gradient(135deg, #0070ba 0%, #003087 100%); color: white; box-shadow: 0 4px 20px rgba(0,112,186,0.3); width: 100%; justify-content: center; }
+.btn-paypal:hover { box-shadow: 0 8px 28px rgba(0,112,186,0.4); transform: translateY(-2px); }
+.btn-fg { background: linear-gradient(135deg, var(--accent) 0%, #c44d1e 100%); color: white; box-shadow: 0 4px 20px var(--accent-glow); width: 100%; justify-content: center; }
+.btn-fg:hover { box-shadow: 0 8px 28px var(--accent-glow); transform: translateY(-2px); }
 
-    .hero-subtitle {
-        font-size: clamp(1.1rem, 3vw, 1.4rem);
-        color: rgba(255, 255, 255, 0.85);
-        margin-bottom: 2.5rem;
-        line-height: 1.6;
-        font-weight: 300;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.section { padding: 7rem 0; position: relative; }
+.section-label { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; text-align: center; }
+.section-title { font-family: var(--font-display); font-size: clamp(2rem,5vw,3.2rem); font-weight: 800; text-align: center; margin-bottom: 1rem; letter-spacing: -1px; }
+.section-desc { color: var(--text-dim); text-align: center; max-width: 600px; margin: 0 auto 4rem; font-size: 1.05rem; line-height: 1.7; }
 
-    .cta-btn {
-        padding: 0.9rem 1.8rem;
-        border: none;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        text-align: center;
-        display: block;
-        width: 100%;
-    }
-    
-    .cta-btn:hover {
-        transform: translateY(-3px);
-    }
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: start; }
+@media (max-width: 1024px) { .products-grid { grid-template-columns: 1fr; max-width: 550px; margin: 0 auto; } }
 
-    .cta-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-        transition: left 0.6s;
-    }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; display: flex; flex-direction: column; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.4s; }
+.card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.card:hover::before { opacity: 1; }
 
-    .cta-btn:hover::before {
-        left: 100%;
-    }
+.card-hero { width: 100%; aspect-ratio: 16 / 10; display: block; background: #000; }
 
-    .cta-d2jsp {
-        background: linear-gradient(135deg, var(--color-primary) 0%, #ff8c42 100%);
-        color: white;
-        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.25);
-    }
-    
-    .cta-d2jsp:hover {
-        box-shadow: 0 12px 35px rgba(255, 107, 53, 0.35);
-    }
+.card-gallery { position: relative; aspect-ratio: 16 / 10; background: #000; overflow: hidden; }
+.gallery-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.7s ease; background-size: contain; background-repeat: no-repeat; background-position: center; }
+.gallery-slide.active { opacity: 1; }
+.gallery-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 10; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.3s; }
+.dot.active { background: white; width: 20px; border-radius: 3px; }
 
-    .cta-paypal {
-        background: linear-gradient(135deg, var(--color-paypal) 0%, #009cde 100%);
-        color: white;
-        box-shadow: 0 8px 25px rgba(0, 112, 186, 0.25);
-    }
-    
-    .cta-paypal:hover {
-        box-shadow: 0 12px 35px rgba(0, 112, 186, 0.35);
-    }
+.card-body { padding: 2rem; flex: 1; display: flex; flex-direction: column; }
+.card-tag { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.75rem; padding: 0.3rem 0.7rem; background: rgba(0,212,170,0.08); border-radius: 4px; width: fit-content; }
+.card-tag.premium { color: var(--gold); background: rgba(240,180,0,0.08); }
+.card-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; margin-bottom: 0.35rem; letter-spacing: -0.5px; }
+.card-subtitle { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem; font-weight: 400; }
 
-    .section {
-        padding: 6rem 0;
-        position: relative;
-    }
+.features-list { list-style: none; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.55rem; }
+.features-list li { display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.875rem; color: rgba(255,255,255,0.75); line-height: 1.5; }
+.features-list li .ic { flex-shrink: 0; width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; margin-top: 2px; background: rgba(0,212,170,0.1); color: var(--cyan); }
+.features-list li .ic.gold { background: rgba(240,180,0,0.1); color: var(--gold); }
 
-    .section-title {
-        font-size: clamp(2rem, 5vw, 3rem);
-        font-weight: 800;
-        text-align: center;
-        margin-bottom: 4rem;
-        background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
+.price-block { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.price-row { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1.25rem; }
+.price { font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; }
+.price small { font-size: 0.85rem; font-weight: 400; color: var(--text-dim); letter-spacing: 0; }
+.price-divider { color: var(--text-muted); font-size: 0.8rem; font-style: italic; }
+.btn-group { display: flex; flex-direction: column; gap: 0.6rem; }
 
-    .products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 2.5rem;
-        align-items: start;
-    }
+.video-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 3rem 2rem; max-width: 900px; margin: 0 auto; }
+.video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-sm); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
-    .product-card {
-        background: var(--color-surface);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        overflow: hidden;
-    }
-    
-    .product-details {
-        padding: 2.5rem;
-    }
+.footer { padding: 4rem 0 2rem; border-top: 1px solid var(--border); }
+.footer-inner { display: flex; flex-direction: column; align-items: center; gap: 2rem; text-align: center; }
+.footer-brand { font-family: var(--font-mono); font-size: 1rem; font-weight: 700; color: var(--accent); }
+.footer-brand span { color: var(--text-muted); font-weight: 400; }
+.footer-links { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+.footer-link { padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-size: 0.875rem; font-weight: 500; color: var(--text-dim); border: 1px solid var(--border); background: transparent; transition: all 0.25s; }
+.footer-link:hover { color: var(--text); border-color: rgba(255,255,255,0.12); background: var(--bg-card); transform: translateY(-1px); }
+.footer-copy { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.3px; }
 
-    .product-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: white;
-    }
-    
-    .product-tagline {
-        font-size: 1rem;
-        color: var(--color-primary);
-        margin-bottom: 1.5rem;
-        font-weight: 500;
-    }
+.highlights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
+@media (max-width: 768px) { .highlights { grid-template-columns: 1fr; } }
+.highlight-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; transition: all 0.3s; }
+.highlight-card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-2px); }
+.highlight-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1.25rem; }
+.highlight-icon.fire { background: rgba(232,93,38,0.1); }
+.highlight-icon.bolt { background: rgba(0,212,170,0.1); }
+.highlight-icon.shield { background: rgba(88,101,242,0.1); }
+.highlight-card h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.highlight-card p { color: var(--text-dim); font-size: 0.875rem; line-height: 1.65; }
 
-    .product-features {
-        list-style: none;
-        padding: 0;
-        margin-bottom: 2rem;
-    }
+.rotw-badge { display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); padding: 0.2rem 0.6rem; background: rgba(240,180,0,0.08); border: 1px solid rgba(240,180,0,0.15); border-radius: 4px; margin-left: 0.5rem; vertical-align: middle; }
 
-    .product-features li {
-        padding: 0.6rem 0;
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.8);
-        display: flex;
-        align-items: flex-start;
-    }
-    
-    .product-features li::before {
-        content: '✓';
-        color: var(--color-primary);
-        font-weight: bold;
-        margin-right: 0.75rem;
-        margin-top: 2px;
-    }
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
 
-    .price-section {
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .price-tag {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: white;
-    }
-    
-    .price-tag span {
-        font-size: 1rem;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .price-divider {
-        margin: 1rem auto;
-        font-style: italic;
-        color: rgba(255, 255, 255, 0.5);
-    }
-
-    .button-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        margin-top: auto;
-    }
-    
-    .product-gallery {
-        position: relative;
-        overflow: hidden;
-        aspect-ratio: 16 / 10;
-        background-color: #000;
-    }
-    
-    .gallery-slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transition: opacity 0.6s ease-in-out;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-    
-    .gallery-slide.active {
-        opacity: 1;
-    }
-    
-    .gallery-dots {
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        z-index: 10;
-    }
-    
-    .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: rgba(255,255,255,0.4);
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    
-    .dot.active {
-        background-color: white;
-    }
-
-    .video-section {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 20px;
-        padding: 4rem 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .video-wrapper {
-        position: relative;
-        padding-bottom: 56.25%;
-        height: 0;
-        overflow: hidden;
-        border-radius: 15px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    }
-    
-    .video-wrapper iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-    }
-
-    .creator {
-        padding: 4rem 2rem;
-        text-align: center;
-        margin-top: 2rem;
-    }
-
-    .creator-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: white;
-        margin-bottom: 2rem;
-    }
-
-    .creator-links {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .creator-link {
-        padding: 0.8rem 1.5rem;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--color-text);
-    }
-
-    .creator-link:hover {
-        transform: translateY(-2px);
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .fade-in-up {
-        opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    
-    .fade-in-up.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero h1 { font-size: 2.5rem; letter-spacing: -1px; }
+    .section { padding: 4rem 0; }
+    .card-body { padding: 1.5rem; }
+}
 </style>
 </head>
 <body>
-  <div class="bg-particles"></div>
 
-  <header class="hero">
+<div class="grid-bg"></div>
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<nav>
     <div class="container">
-        <div class="hero-content">
-            <h1>Welcome to k0m's Tool Suite</h1>
-            <p class="hero-subtitle">Elevate your Diablo II: Resurrected experience with powerful, professional tools designed for efficiency and multi-instance gameplay. From local automation to remote Discord control, stop the grind and start dominating.</p>
+        <a href="#" class="nav-logo">k0m<span>.tools</span></a>
+        <div class="nav-links">
+            <a href="#products">Products</a>
+            <a href="#guide">Guide</a>
+            <a href="https://discord.gg/4QBprVsxhe" target="_blank">Discord</a>
+            <a href="https://forums.d2jsp.org/user.php?i=1368726" target="_blank" class="nav-cta">d2jsp Profile</a>
         </div>
     </div>
-  </header>
+</nav>
 
-  <main>
-    <section id="products" class="section">
-        <div class="container">
-            <h2 class="section-title">Choose Your Advantage</h2>
-            <div class="products-grid">
-                <div class="product-card fade-in-up">
-                    <div class="product-gallery" data-gallery-id="p8-script">
-                        <div class="gallery-slide active" style="background-image: url('https://i.imgur.com/uponjM0.png');"></div>
-                        <div class="gallery-slide" style="background-image: url('https://i.imgur.com/xnkRk2V.png');"></div>
-                        <div class="gallery-slide" style="background-image: url('https://i.imgur.com/pLm76WI.png');"></div>
-                        <div class="gallery-dots"></div>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">P8 Script</h3>
-                        <p class="product-tagline">The Ultimate Farming Automaton</p>
-                        <ul class="product-features">
-                            <li>Intelligent game creation and management.</li>
-                            <li>Automated BO (Battle Orders) buff casting.</li>
-                            <li>Smart filler join/exit game.</li>
-                            <li>Seamlessly exits and restarts the game cycle.</li>
-                            <li>Fully customizable to fit your playstyle.</li>
-                            <li>Designed for safety and efficiency.</li>
-                        </ul>
-                        <div class="button-group">
-                            <div class="price-section">
-                                <div class="price-tag">$50 <span>USD</span></div>
-                                <div class="price-divider">or</div>
-                                <div class="price-tag">5,000 <span>FG</span></div>
-                            </div>
-                            <a href="https://paypal.me/AshAlefi/50USD" target="_blank" class="cta-btn cta-paypal">Pay with PayPal</a>
-                            <a href="https://forums.d2jsp.org/user.php?i=1433735" target="_blank" class="cta-btn cta-d2jsp">Pay with Forum Gold</a>
+<header class="hero">
+    <div class="container">
+        <div class="hero-badge">D2R ROTW Automation Suite</div>
+        <h1><span class="gradient">Dominate</span> Diablo II<br>Resurrected</h1>
+        <p class="hero-sub">Professional automation tools for D2R ROTW — from single-PC farming to full 2-PC remote control setups. Stop grinding manually, start dominating.</p>
+        <div class="hero-actions">
+            <a href="#products" class="btn btn-primary">View Products ↓</a>
+            <a href="https://discord.gg/4QBprVsxhe" target="_blank" class="btn btn-secondary">
+                <svg width="18" height="14" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 41 41 0 00-1.8 3.7 54 54 0 00-16.2 0A39 39 0 0025.4.3a.2.2 0 00-.2-.1 58.4 58.4 0 00-14.7 4.6.2.2 0 00-.1.1C1.5 18.7-.9 32 .3 45.2v.1a58.7 58.7 0 0017.9 9.1.2.2 0 00.3-.1 42 42 0 003.6-5.9.2.2 0 00-.1-.3 38.6 38.6 0 01-5.5-2.7.2.2 0 01 0-.4l1.1-.9a.2.2 0 01.2 0 41.9 41.9 0 0035.6 0 .2.2 0 01.2 0l1.1.9a.2.2 0 010 .4 36.3 36.3 0 01-5.5 2.7.2.2 0 00-.1.3 47.2 47.2 0 003.6 5.9.2.2 0 00.3.1A58.5 58.5 0 0070.7 45.3v-.1c1.4-15-2.3-28-9.8-39.6a.2.2 0 00-.8-.7zM23.7 37c-3.4 0-6.2-3.2-6.2-7s2.7-7 6.2-7 6.3 3.2 6.2 7-2.8 7-6.2 7zm23 0c-3.4 0-6.2-3.2-6.2-7s2.7-7 6.2-7 6.3 3.2 6.2 7-2.7 7-6.2 7z"/></svg>
+                Join Discord
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="products" class="section">
+    <div class="container">
+        <div class="section-label">Products</div>
+        <h2 class="section-title">Choose Your Advantage</h2>
+        <p class="section-desc">Each tool is battle-tested, regularly updated, and backed by direct support. Built for D2R ROTW.</p>
+
+        <div class="products-grid">
+
+            <!-- P8 Script -->
+            <div class="card reveal">
+                <img src="p8-hero.svg" alt="P8 Script" class="card-hero">
+                <div class="card-gallery" data-gallery-id="p8">
+                    <div class="gallery-slide active" style="background-image: url('https://i.imgur.com/uponjM0.png');"></div>
+                    <div class="gallery-slide" style="background-image: url('https://i.imgur.com/xnkRk2V.png');"></div>
+                    <div class="gallery-slide" style="background-image: url('https://i.imgur.com/pLm76WI.png');"></div>
+                    <div class="gallery-dots"></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-tag">⚡ Automation</div>
+                    <h3 class="card-title">P8 Script <span class="rotw-badge">ROTW</span></h3>
+                    <p class="card-subtitle">Fully automated farming for single-PC setups.</p>
+                    <ul class="features-list">
+                        <li><span class="ic">✓</span>Automatically creates and manages games for you</li>
+                        <li><span class="ic">✓</span>Auto-casts Battle Orders buffs every cycle</li>
+                        <li><span class="ic">✓</span>Fillers join and leave games on their own</li>
+                        <li><span class="ic">✓</span>Seamless game cycling — exits, remakes, repeats</li>
+                        <li><span class="ic">✓</span>Fully customizable to fit your playstyle</li>
+                        <li><span class="ic">✓</span>Designed for safety and efficiency</li>
+                    </ul>
+                    <div class="price-block">
+                        <div class="price-row">
+                            <span class="price">$50 <small>USD</small></span>
+                            <span class="price-divider">or</span>
+                            <span class="price">5,000 <small>FG</small></span>
+                        </div>
+                        <div class="btn-group">
+                            <a href="https://paypal.me/AshAlefi/50USD" target="_blank" class="btn btn-paypal">Pay with PayPal</a>
+                            <a href="https://forums.d2jsp.org/user.php?i=1368726" target="_blank" class="btn btn-fg">Pay with Forum Gold</a>
                         </div>
                     </div>
                 </div>
-                
-                <div class="product-card fade-in-up">
-                    <div class="product-gallery" data-gallery-id="d2r-loader">
-                        <div class="gallery-slide active" style="background-image: url('https://i.imgur.com/VJYAUgu.png');"></div>
-                        <div class="gallery-slide" style="background-image: url('https://i.imgur.com/tNhhUaO.png');"></div>
-                        <div class="gallery-dots"></div>
-                    </div>
-                    <div class="product-details">
-                        <h3 class="product-title">D2RLoader</h3>
-                        <p class="product-tagline">Advanced Multi-Instance Launcher</p>
-                        <ul class="product-features">
-                            <li>Launch multiple D2R instances lightning-fast.</li>
-                            <li>Automatically handles mutex locks.</li>
-                            <li>Supports both password and web token authentication.</li>
-                            <li>Remembers and restores window positions.</li>
-                            <li>Auto-skips intro loading screens.</li>
-                            <li>Manage main and leecher accounts with ease.</li>
-                        </ul>
-                        <div class="button-group">
-                            <div class="price-section">
-                                <div class="price-tag">$12 <span>USD</span></div>
-                                <div class="price-divider">or</div>
-                                <div class="price-tag">1,000 <span>FG</span></div>
-                            </div>
-                            <a href="https://paypal.me/AshAlefi/12USD" target="_blank" class="cta-btn cta-paypal">Pay with PayPal</a>
-                            <a href="https://forums.d2jsp.org/user.php?i=1433735" target="_blank" class="cta-btn cta-d2jsp">Pay with Forum Gold</a>
+            </div>
+
+            <!-- D2RLoader -->
+            <div class="card reveal reveal-delay-1">
+                <img src="loader-hero.svg" alt="D2RLoader" class="card-hero">
+                <div class="card-gallery" data-gallery-id="loader">
+                    <div class="gallery-slide active" style="background-image: url('https://i.imgur.com/VJYAUgu.png');"></div>
+                    <div class="gallery-slide" style="background-image: url('https://i.imgur.com/tNhhUaO.png');"></div>
+                    <div class="gallery-dots"></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-tag">🚀 Launcher</div>
+                    <h3 class="card-title">D2RLoader <span class="rotw-badge">ROTW</span></h3>
+                    <p class="card-subtitle">Multi-instance launcher with automatic token fetching.</p>
+                    <ul class="features-list">
+                        <li><span class="ic">✓</span>Auto-fetches Battle.net login tokens — one click per account or batch all at once</li>
+                        <li><span class="ic">✓</span>Securely injects tokens so you never paste them manually</li>
+                        <li><span class="ic">✓</span>Launch as many D2R instances as you want — handles everything automatically</li>
+                        <li><span class="ic">✓</span>Saves and restores window positions per account</li>
+                        <li><span class="ic">✓</span>Skips intro loading screens automatically</li>
+                        <li><span class="ic">✓</span>Per-account settings: realm (EU/NA/ASIA), character names, auth method</li>
+                        <li><span class="ic">✓</span>Clean, modern dark-themed interface</li>
+                    </ul>
+                    <div class="price-block">
+                        <div class="price-row">
+                            <span class="price">$12 <small>USD</small></span>
+                            <span class="price-divider">or</span>
+                            <span class="price">1,000 <small>FG</small></span>
+                        </div>
+                        <div class="btn-group">
+                            <a href="https://paypal.me/AshAlefi/12USD" target="_blank" class="btn btn-paypal">Pay with PayPal</a>
+                            <a href="https://forums.d2jsp.org/user.php?i=1368726" target="_blank" class="btn btn-fg">Pay with Forum Gold</a>
                         </div>
                     </div>
                 </div>
-                
-                <div class="product-card fade-in-up">
-  <div class="product-gallery" data-gallery-id="discord-filler">
-    <div class="gallery-slide active" style="background-image: url('https://i.imgur.com/fvXh0rs.png');"></div>
-    <div class="gallery-slide" style="background-image: url('https://i.imgur.com/K9Xdn6I.png');"></div>
-    <div class="gallery-slide" style="background-image: url('https://i.imgur.com/xJ2E1Xc.png');"></div>
-    <div class="gallery-dots"></div>
-  </div>
-  <div class="product-details">
-    <h3 class="product-title">Discord Filler</h3>
-    <p class="product-tagline">Remote Control via Discord</p>
-    <ul class="product-features">
-      <li>Control everything through Discord commands from anywhere.</li>
-      <li>Same powerful P8 Script functionality with remote access.</li>
-      <li>Supports 2 PC or VM setups for ultimate flexibility.</li>
-      <li>Automatic game counter and intelligent BoBarb detection.</li>
-      <li>Professional Discord embeds with real-time status updates.</li>
-    </ul>
-    <div class="button-group">
-      <div class="price-section">
-        <div class="price-tag">$199 <span>USD</span></div>
-        <div class="price-divider">or</div>
-        <div class="price-tag">18,000 <span>FG</span></div>
-      </div>
-      <a href="https://paypal.me/AshAlefi/199USD" target="_blank" class="cta-btn cta-paypal">Pay with PayPal</a>
-      <a href="https://forums.d2jsp.org/user.php?i=1433735" target="_blank" class="cta-btn cta-d2jsp">Pay with Forum Gold</a>
+            </div>
+
+            <!-- D2R 2-PC System -->
+            <div class="card reveal reveal-delay-2">
+                <img src="2pc-hero.svg" alt="D2R 2-PC System" class="card-hero">
+                <div class="card-gallery" data-gallery-id="filler">
+                    <div class="gallery-slide active" style="background-image: url('https://i.imgur.com/fvXh0rs.png');"></div>
+                    <div class="gallery-slide" style="background-image: url('https://i.imgur.com/K9Xdn6I.png');"></div>
+                    <div class="gallery-slide" style="background-image: url('https://i.imgur.com/xJ2E1Xc.png');"></div>
+                    <div class="gallery-dots"></div>
+                </div>
+                <div class="card-body">
+                    <div class="card-tag premium">🏆 Premium</div>
+                    <h3 class="card-title">D2R 2-PC System <span class="rotw-badge">ROTW</span></h3>
+                    <p class="card-subtitle">Run fillers on one PC, play on another. Control everything remotely.</p>
+                    <ul class="features-list">
+                        <li><span class="ic gold">✓</span>All filler actions run silently in the background — zero focus stealing, zero interruption</li>
+                        <li><span class="ic gold">✓</span>Instant PC-to-PC control with zero Discord latency — press a hotkey, fillers react immediately</li>
+                        <li><span class="ic gold">✓</span>Compact Agent app on your gaming PC with hotkeys: F5 (BO), F6 (Next Game), F7 (Toggle), F8 (Leave)</li>
+                        <li><span class="ic gold">✓</span>Full Discord bot — /joingame, /ng, /bo, /leave, /toggle, /status from anywhere</li>
+                        <li><span class="ic gold">✓</span>Web dashboard with live updates and event log — check status from any device on your network</li>
+                        <li><span class="ic gold">✓</span>All fillers and BoBarb join, leave, and buff simultaneously — no waiting one by one</li>
+                        <li><span class="ic gold">✓</span>Auto waypoint navigation and Battle Orders casting on your BoBarb</li>
+                        <li><span class="ic gold">✓</span>Crash detection, speed profiles (Fast / Balanced / Slow), and leech toggling</li>
+                    </ul>
+                    <div class="price-block">
+                        <div class="price-row">
+                            <span class="price">$199 <small>USD</small></span>
+                            <span class="price-divider">or</span>
+                            <span class="price">18,000 <small>FG</small></span>
+                        </div>
+                        <div class="btn-group">
+                            <a href="https://paypal.me/AshAlefi/199USD" target="_blank" class="btn btn-paypal">Pay with PayPal</a>
+                            <a href="https://forums.d2jsp.org/user.php?i=1368726" target="_blank" class="btn btn-fg">Pay with Forum Gold</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-  </div>
-</div>
+</section>
 
+<section class="section">
+    <div class="container">
+        <div class="section-label">Why k0m</div>
+        <h2 class="section-title">Built Different</h2>
+        <p class="section-desc">These aren't scripts duct-taped together — they're engineered systems that just work.</p>
+        <div class="highlights">
+            <div class="highlight-card reveal">
+                <div class="highlight-icon fire">🔥</div>
+                <h3>Invisible Operation</h3>
+                <p>Everything runs silently in the background. Your fillers join, leave, buff, and cycle games without ever stealing focus from your main character. You won't even notice them working.</p>
+            </div>
+            <div class="highlight-card reveal reveal-delay-1">
+                <div class="highlight-icon bolt">⚡</div>
+                <h3>Instant Remote Control</h3>
+                <p>Press a hotkey on your gaming PC and your filler PC reacts instantly. Or use Discord commands from your phone. You're always in control, from anywhere.</p>
+            </div>
+            <div class="highlight-card reveal reveal-delay-2">
+                <div class="highlight-icon shield">🛡️</div>
+                <h3>Direct Support</h3>
+                <p>Active Discord community, video tutorials, and direct support from k0m. Every license gets hands-on setup help and lifetime updates.</p>
             </div>
         </div>
-    </section>
-    
-    <section id="guide" class="section">
-        <div class="container">
-            <h2 class="section-title">Complete Video Guide</h2>
-            <div class="video-section fade-in-up">
-                <div class="video-wrapper">
-                    <iframe src="https://www.youtube.com/embed/a5z5uys5xaA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
+    </div>
+</section>
+
+<section id="guide" class="section">
+    <div class="container">
+        <div class="section-label">Tutorial</div>
+        <h2 class="section-title">Complete Video Guide</h2>
+        <p class="section-desc">Full walkthrough from install to first run. Everything you need to get started.</p>
+        <div class="video-card reveal">
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/a5z5uys5xaA" title="k0m D2R Tools Guide" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="section">
-        <div class="container">
-            <div class="creator">
-                <h2 class="creator-title">Created by k0m</h2>
-                <div class="creator-links">
-                    <a href="https://forums.d2jsp.org/user.php?i=1433735" target="_blank" class="creator-link">d2jsp Profile</a>
-                    <a href="https://discord.gg/4QBprVsxhe" target="_blank" class="creator-link">Join the Discord</a>
-                    <a href="https://discord.com/users/666741987570876425" target="_blank" class="creator-link">Contact on Discord</a>
-                </div>
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-brand">k0m<span>.tools</span></div>
+            <div class="footer-links">
+                <a href="https://forums.d2jsp.org/user.php?i=1368726" target="_blank" class="footer-link">d2jsp Profile</a>
+                <a href="https://discord.gg/4QBprVsxhe" target="_blank" class="footer-link">Discord Server</a>
+                <a href="https://discord.com/users/666741987570876425" target="_blank" class="footer-link">DM on Discord</a>
             </div>
+            <p class="footer-copy">© 2025 k0m — All tools are provided as-is. Use responsibly.</p>
         </div>
-    </section>
-  </main>
+    </div>
+</footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Particle animation
-        const particleContainer = document.querySelector('.bg-particles');
-        if (particleContainer) {
-            const particleCount = 20;
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 8 + 's';
-                particle.style.animationDuration = 5 + Math.random() * 5 + 's';
-                particleContainer.appendChild(particle);
-            }
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    document.querySelectorAll('.card-gallery').forEach(gallery => {
+        const slides = gallery.querySelectorAll('.gallery-slide');
+        const dotsContainer = gallery.querySelector('.gallery-dots');
+        let current = 0, interval;
+        function show(i) {
+            slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+            if (dotsContainer) dotsContainer.querySelectorAll('.dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+            current = i;
         }
-
-        // Image Galleries
-        document.querySelectorAll('.product-gallery').forEach(gallery => {
-            const slides = gallery.querySelectorAll('.gallery-slide');
-            const dotsContainer = gallery.querySelector('.gallery-dots');
-            let currentSlide = 0;
-            let slideInterval;
-
-            function showSlide(index) {
-                slides.forEach((slide, i) => {
-                    slide.classList.toggle('active', i === index);
-                });
-                if (dotsContainer) {
-                    const dots = dotsContainer.querySelectorAll('.dot');
-                    dots.forEach((dot, i) => {
-                        dot.classList.toggle('active', i === index);
-                    });
-                }
-                currentSlide = index;
-            }
-
-            function nextSlide() {
-                showSlide((currentSlide + 1) % slides.length);
-            }
-
-            if (dotsContainer) {
-                slides.forEach((_, i) => {
-                    const dot = document.createElement('div');
-                    dot.classList.add('dot');
-                    if (i === 0) dot.classList.add('active');
-                    dot.addEventListener('click', () => {
-                        showSlide(i);
-                        resetInterval();
-                    });
-                    dotsContainer.appendChild(dot);
-                });
-            }
-
-            function startInterval() {
-                slideInterval = setInterval(nextSlide, 4000);
-            }
-
-            function resetInterval() {
-                clearInterval(slideInterval);
-                startInterval();
-            }
-
-            startInterval();
-        });
-
-        // Scroll-triggered animations
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
+        if (dotsContainer) {
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                dot.onclick = () => { show(i); clearInterval(interval); interval = setInterval(() => show((current + 1) % slides.length), 5000); };
+                dotsContainer.appendChild(dot);
             });
-        }, observerOptions);
-
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            observer.observe(el);
-        });
+        }
+        interval = setInterval(() => show((current + 1) % slides.length), 5000);
     });
-  </script>
+
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+        nav.style.background = window.scrollY > 50 ? 'rgba(7, 8, 12, 0.85)' : 'rgba(7, 8, 12, 0.6)';
+    });
+});
+</script>
 </body>
 </html>
